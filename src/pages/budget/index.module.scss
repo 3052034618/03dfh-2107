@@ -255,3 +255,213 @@
     opacity: 0.9;
   }
 }
+
+.emptyState {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.emptySection {
+  margin: 0 $page-padding $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.emptyIcon2 {
+  font-size: 80rpx;
+}
+
+.emptyText2 {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.scrollContent {
+  height: calc(100vh - 160rpx);
+}
+
+.itemActions {
+  display: flex;
+  gap: $spacing-xs;
+  align-items: center;
+}
+
+.deleteBtn {
+  font-size: 24rpx;
+  color: $color-error;
+  padding: $spacing-xs $spacing-sm;
+  background: rgba(239, 68, 68, 0.1);
+  border-radius: $radius-sm;
+}
+
+.editForm {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.editInput {
+  width: 100%;
+  height: 72rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  border: 2rpx solid $color-divider;
+}
+
+.editRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.editLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  flex-shrink: 0;
+}
+
+.editAmountInput {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  border: 2rpx solid $color-divider;
+}
+
+.editTextarea {
+  width: 100%;
+  min-height: 120rpx;
+  padding: $spacing-md;
+  background: $color-bg-page;
+  border-radius: $radius-md;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  border: 2rpx solid $color-divider;
+  line-height: 1.5;
+}
+
+.editActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: $spacing-md;
+}
+
+.cancelBtn {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-md;
+  background: $color-bg-page;
+}
+
+.saveBtn {
+  font-size: $font-size-sm;
+  color: $color-text-white;
+  padding: $spacing-sm $spacing-lg;
+  border-radius: $radius-md;
+  background: $color-primary;
+}
+
+.addForm {
+  padding: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.addFormTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.categoryRow {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-sm;
+}
+
+.categoryLabel {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  padding-top: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.categoryOptions {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+}
+
+.categoryOption {
+  font-size: 24rpx;
+  color: $color-text-secondary;
+  padding: $spacing-xs $spacing-md;
+  border-radius: $radius-round;
+  background: $color-bg-page;
+  border: 2rpx solid $color-divider;
+}
+
+.categoryOptionActive {
+  color: $color-primary;
+  border-color: $color-primary;
+  background: $color-primary-bg;
+}
+
+.memberSubtitle {
+  font-size: $font-size-sm;
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.memberInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.memberCampus {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.noMembers {
+  padding: $spacing-lg;
+  text-align: center;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.bottomSpacer {
+  height: $spacing-lg;
+}

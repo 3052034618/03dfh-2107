@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { View, Text, Input, Textarea, Button } from '@tarojs/components';
 import Taro from '@tarojs/taro';
-import { mockScripts } from '@/data/mockData';
+import { mockScripts, mockCurrentUser } from '@/data/mockData';
 import { Script } from '@/types';
+import { useStore } from '@/store';
 import styles from './index.module.scss';
 
 const CreateActivityPage: React.FC = () => {
+  const { addActivity } = useStore();
+  
   const [title, setTitle] = useState('');
   const [targetCity, setTargetCity] = useState('');
   const [targetShop, setTargetShop] = useState('');
@@ -14,8 +17,11 @@ const CreateActivityPage: React.FC = () => {
   const [maxMembers, setMaxMembers] = useState(8);
   const [description, setDescription] = useState('');
   const [selectedScripts, setSelectedScripts] = useState<Script[]>([mockScripts[0]]);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = () => {
+    if (submitting) return;
+    
     if (!title.trim()) {
       Taro.showToast({ title: '请填写活动标题', icon: 'none' });
       return;
@@ -24,10 +30,42 @@ const CreateActivityPage: React.FC = () => {
       Taro.showToast({ title: '请选择目的城市', icon: 'none' });
       return;
     }
-    Taro.showToast({ title: '活动创建成功！', icon: 'success' });
-    setTimeout(() => {
-      Taro.navigateBack();
-    }, 1500);
+    if (selectedScripts.length === 0) {
+      Taro.showToast({ title: '请至少选择一个剧本', icon: 'none' });
+      return;
+    }
+
+    setSubmitting(true);
+    
+    try {
+      addActivity({
+        title: title.trim(),
+        targetCity: targetCity.trim(),
+        targetShop: targetShop.trim(),
+        startDate,
+        endDate,
+        maxMembers,
+        description,
+        scripts: selectedScripts,
+        creator: {
+          id: mockCurrentUser.id,
+          name: mockCurrentUser.name,
+          avatar: mockCurrentUser.avatar
+        },
+        days: Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)) + 1)
+      });
+
+      console.log('[CreateActivity] Activity created successfully');
+      
+      Taro.showToast({ title: '活动创建成功！', icon: 'success' });
+      setTimeout(() => {
+        Taro.switchTab({ url: '/pages/home/index' });
+      }, 1500);
+    } catch (error) {
+      console.error('[CreateActivity] Failed to create activity:', error);
+      Taro.showToast({ title: '创建失败，请重试', icon: 'none' });
+      setSubmitting(false);
+    }
   };
 
   const handleAddScript = () => {

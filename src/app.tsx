@@ -1,19 +1,27 @@
 import React, { useEffect } from 'react';
 import { useDidShow, useDidHide } from '@tarojs/taro';
+import { StoreProvider } from './store';
 // 全局样式
 import './app.scss';
 
 function App(props) {
-  // 可以使用所有的 React Hooks
-  useEffect(() => {});
+  useEffect(() => {
+    console.log('[App] ScriptClub MiniApp initialized');
+  }, []);
 
-  // 对应 onShow
-  useDidShow(() => {});
+  useDidShow(() => {
+    console.log('[App] App showed');
+  });
 
-  // 对应 onHide
-  useDidHide(() => {});
+  useDidHide(() => {
+    console.log('[App] App hided');
+  });
 
-  return props.children;
+  return (
+    <StoreProvider>
+      {props.children}
+    </StoreProvider>
+  );
 }
 
 export default App;

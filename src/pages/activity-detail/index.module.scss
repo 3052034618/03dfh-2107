@@ -281,3 +281,37 @@
   color: $color-text-primary;
   @include text-ellipsis;
 }
+
+.emptyState {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-lg;
+}
+
+.emptyIcon {
+  font-size: 120rpx;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.scrollContent {
+  height: calc(100vh - 160rpx);
+}
+
+.noScripts,
+.noMembers {
+  padding: $spacing-md;
+  text-align: center;
+  color: $color-text-tertiary;
+  font-size: $font-size-sm;
+}
+
+.bottomSpacer {
+  height: $spacing-lg;
+}

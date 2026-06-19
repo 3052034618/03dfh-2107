@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { View, Text, Image } from '@tarojs/components';
+import { View, Text, Image, ScrollView } from '@tarojs/components';
 import { useRouter } from '@tarojs/taro';
 import classnames from 'classnames';
-import { mockActivities } from '@/data/mockData';
 import { Activity, SignUpInfo, GroupedSignUps } from '@/types';
+import { useStore } from '@/store';
 import { groupSignUps } from '@/utils';
 import styles from './index.module.scss';
 
@@ -11,16 +11,35 @@ type TabType = 'campus' | 'station' | 'accommodation';
 
 const GroupingPage: React.FC = () => {
   const router = useRouter();
+  const { getActivityById } = useStore();
+  const activityId = router.params.id;
+
   const [activity, setActivity] = useState<Activity | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>('campus');
 
-  useEffect(() => {
-    const id = router.params.id;
-    const found = mockActivities.find(a => a.id === id);
+  const loadActivityData = () => {
+    const found = getActivityById(activityId);
     if (found) {
+      console.log('[Grouping] Loaded activity:', found.id, 'signUps:', found.signUps.length);
       setActivity(found);
     }
-  }, [router.params.id]);
+  };
+
+  useEffect(() => {
+    loadActivityData();
+  }, [activityId, getActivityById]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const fresh = getActivityById(activityId);
+      if (fresh && activity && fresh.signUps.length !== activity.signUps.length) {
+        console.log('[Grouping] SignUps updated, refreshing...');
+        loadActivityData();
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [activityId, getActivityById, activity]);
 
   const groupedData = useMemo((): GroupedSignUps | null => {
     if (!activity) return null;
@@ -58,6 +77,14 @@ const GroupingPage: React.FC = () => {
   const renderByCampus = () => {
     if (!groupedData) return null;
     const entries = Object.entries(groupedData.byCampus);
+    if (entries.length === 0) {
+      return (
+        <View className={styles.emptyGroup}>
+          <Text className={styles.emptyIcon}>🏫</Text>
+          <Text className={styles.emptyText}>暂无按校区分组数据</Text>
+        </View>
+      );
+    }
     return entries.map(([campus, members]) => (
       <View key={campus} className={styles.groupCard}>
         <View className={styles.groupHeader}>
@@ -74,6 +101,14 @@ const GroupingPage: React.FC = () => {
   const renderByStation = () => {
     if (!groupedData) return null;
     const entries = Object.entries(groupedData.byStation);
+    if (entries.length === 0) {
+      return (
+        <View className={styles.emptyGroup}>
+          <Text className={styles.emptyIcon}>🚄</Text>
+          <Text className={styles.emptyText}>暂无按车站分组数据</Text>
+        </View>
+      );
+    }
     return entries.map(([station, members]) => (
       <View key={station} className={styles.groupCard}>
         <View className={styles.groupHeader}>
@@ -88,8 +123,8 @@ const GroupingPage: React.FC = () => {
   };
 
   const renderByAccommodation = () => {
-    if (!groupedData) return null;
-    const needAccommodation = activity?.signUps.filter(s => s.needAccommodation) || [];
+    if (!groupedData || !activity) return null;
+    const needAccommodation = activity.signUps.filter(s => s.needAccommodation) || [];
     const noAccommodation = groupedData.noAccommodation;
 
     return (
@@ -100,7 +135,13 @@ const GroupingPage: React.FC = () => {
             <Text className={styles.groupCount}>{needAccommodation.length}人</Text>
           </View>
           <View className={styles.memberList}>
-            {needAccommodation.map(renderMemberItem)}
+            {needAccommodation.length > 0 ? (
+              needAccommodation.map(renderMemberItem)
+            ) : (
+              <View className={styles.emptyState}>
+                <Text className={styles.emptyText}>暂无需要住宿的成员</Text>
+              </View>
+            )}
           </View>
         </View>
         <View className={styles.groupCard}>
@@ -125,7 +166,10 @@ const GroupingPage: React.FC = () => {
   if (!activity) {
     return (
       <View className={styles.page}>
-        <Text>加载中...</Text>
+        <View className={styles.emptyStateGlobal}>
+          <Text className={styles.emptyIcon}>📊</Text>
+          <Text className={styles.emptyText}>加载中...</Text>
+        </View>
       </View>
     );
   }
@@ -166,11 +210,12 @@ const GroupingPage: React.FC = () => {
         ))}
       </View>
 
-      <View className={styles.content}>
+      <ScrollView scrollY className={styles.content}>
         {activeTab === 'campus' && renderByCampus()}
         {activeTab === 'station' && renderByStation()}
         {activeTab === 'accommodation' && renderByAccommodation()}
-      </View>
+        <View className={styles.bottomSpacer} />
+      </ScrollView>
     </View>
   );
 };

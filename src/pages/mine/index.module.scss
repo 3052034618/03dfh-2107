@@ -181,3 +181,28 @@
   color: $color-text-tertiary;
   margin-left: $spacing-sm;
 }
+
+.scrollContent {
+  height: 100vh;
+}
+
+.emptyActivity {
+  padding: $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.emptyActivityIcon {
+  font-size: 80rpx;
+}
+
+.emptyActivityText {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.bottomSpacer {
+  height: $spacing-xl;
+}

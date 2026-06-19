@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Input, Button, Switch } from '@tarojs/components';
 import Taro, { useRouter } from '@tarojs/taro';
 import classnames from 'classnames';
 import { mockCurrentUser } from '@/data/mockData';
+import { useStore } from '@/store';
 import styles from './index.module.scss';
 
 const roleOptions = ['任意', '凶手位', '情感位', '硬核位', '恐怖位', '反串也可'];
 
 const SignUpPage: React.FC = () => {
   const router = useRouter();
+  const { addSignUp, getActivityById, hasSignedUp, getUserVote } = useStore();
+  const activityId = router.params.id;
+
   const [campus, setCampus] = useState(mockCurrentUser.campus);
   const [school, setSchool] = useState(mockCurrentUser.school);
   const [station, setStation] = useState('南京南站');
@@ -17,16 +21,71 @@ const SignUpPage: React.FC = () => {
   const [canOvernight, setCanOvernight] = useState(true);
   const [needAccommodation, setNeedAccommodation] = useState(true);
   const [preferredRole, setPreferredRole] = useState('任意');
+  const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (activityId && hasSignedUp(activityId, mockCurrentUser.id)) {
+      const activity = getActivityById(activityId);
+      const existingSignUp = activity?.signUps.find(s => s.userId === mockCurrentUser.id);
+      if (existingSignUp) {
+        setSchool(existingSignUp.school);
+        setCampus(existingSignUp.campus);
+        setStation(existingSignUp.station);
+        setBudgetMin(existingSignUp.budgetMin);
+        setBudgetMax(existingSignUp.budgetMax);
+        setCanOvernight(existingSignUp.canOvernight);
+        setNeedAccommodation(existingSignUp.needAccommodation);
+        setPreferredRole(existingSignUp.preferredRole);
+      }
+    }
+  }, [activityId, hasSignedUp, getActivityById]);
 
   const handleSubmit = () => {
+    if (submitting) return;
+
+    if (!school.trim()) {
+      Taro.showToast({ title: '请填写所在学校', icon: 'none' });
+      return;
+    }
     if (!campus.trim()) {
       Taro.showToast({ title: '请填写出发校区', icon: 'none' });
       return;
     }
-    Taro.showToast({ title: '报名成功！', icon: 'success' });
-    setTimeout(() => {
-      Taro.navigateBack();
-    }, 1500);
+    if (!station.trim()) {
+      Taro.showToast({ title: '请填写出发车站', icon: 'none' });
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      addSignUp(activityId, {
+        school: school.trim(),
+        campus: campus.trim(),
+        station: station.trim(),
+        budgetMin,
+        budgetMax,
+        canOvernight,
+        needAccommodation,
+        preferredRole
+      });
+
+      console.log('[SignUp] SignUp submitted successfully for activity:', activityId);
+
+      const isUpdate = hasSignedUp(activityId, mockCurrentUser.id);
+      Taro.showToast({ 
+        title: isUpdate ? '报名信息已更新！' : '报名成功！', 
+        icon: 'success' 
+      });
+      
+      setTimeout(() => {
+        Taro.navigateBack();
+      }, 1500);
+    } catch (error) {
+      console.error('[SignUp] Failed to submit sign up:', error);
+      Taro.showToast({ title: '提交失败，请重试', icon: 'none' });
+      setSubmitting(false);
+    }
   };
 
   const handleBudgetChange = (type: 'min' | 'max', value: string) => {

@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, Text, Button, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import classnames from 'classnames';
-import { mockActivities } from '@/data/mockData';
+import { useStore } from '@/store';
 import { Activity } from '@/types';
 import ActivityCard from '@/components/ActivityCard';
 import styles from './index.module.scss';
@@ -10,8 +10,12 @@ import styles from './index.module.scss';
 type FilterType = 'all' | 'recruiting' | 'completed';
 
 const HomePage: React.FC = () => {
+  const { activities } = useStore();
   const [activeTab, setActiveTab] = useState<FilterType>('all');
-  const [activities] = useState<Activity[]>(mockActivities);
+
+  React.useEffect(() => {
+    console.log('[Home] Activities updated, count:', activities.length);
+  }, [activities]);
 
   const filteredActivities = useMemo(() => {
     if (activeTab === 'all') return activities;
