@@ -1,0 +1,128 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $color-bg-page 0%, $color-bg-card 20%);
+}
+
+.header {
+  padding: $spacing-lg $page-padding;
+  padding-top: 40rpx;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-primary;
+  background: linear-gradient(135deg, $color-primary 0%, $color-secondary 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: $font-size-sm;
+  color: $color-text-secondary;
+  margin-top: $spacing-xs;
+}
+
+.createBtn {
+  @include button-reset;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  color: $color-text-white;
+  padding: 0 $spacing-lg;
+  height: 64rpx;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  box-shadow: 0 4rpx 12rpx rgba(124, 58, 237, 0.3);
+
+  &:active {
+    transform: scale(0.96);
+    opacity: 0.9;
+  }
+}
+
+.filterTabs {
+  display: flex;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  padding: 6rpx;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+}
+
+.tabItem {
+  flex: 1;
+  text-align: center;
+  padding: $spacing-sm 0;
+  border-radius: $radius-button;
+  font-size: $font-size-sm;
+  transition: all $transition-base;
+
+  &.active {
+    background: $color-primary;
+    color: $color-text-white;
+    font-weight: $font-weight-medium;
+  }
+
+  &:not(.active) {
+    color: $color-text-secondary;
+  }
+}
+
+.listContainer {
+  padding: 0 $page-padding;
+  padding-bottom: 120rpx;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 80rpx 0;
+}
+
+.emptyIcon {
+  font-size: 80rpx;
+  margin-bottom: $spacing-md;
+}
+
+.emptyText {
+  font-size: $font-size-md;
+  color: $color-text-tertiary;
+}
+
+.floatingBtn {
+  position: fixed;
+  right: $page-padding;
+  bottom: 140rpx;
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: $radius-round;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-white;
+  font-size: 48rpx;
+  box-shadow: 0 8rpx 24rpx rgba(124, 58, 237, 0.4);
+  z-index: 100;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}

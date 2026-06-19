@@ -1,0 +1,183 @@
+@use '@/styles/variables.scss' as *;
+
+.page {
+  min-height: 100vh;
+  background: linear-gradient(180deg, $color-bg-page 0%, $color-bg-card 15%);
+}
+
+.header {
+  padding: $spacing-xl $page-padding;
+  padding-top: 60rpx;
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: 0 0 40rpx 40rpx;
+  margin-bottom: -40rpx;
+  position: relative;
+  z-index: 1;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: $radius-round;
+  border: 4rpx solid rgba(255, 255, 255, 0.3);
+  margin-right: $spacing-md;
+}
+
+.profileInfo {
+  flex: 1;
+}
+
+.userName {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: $spacing-xs;
+}
+
+.schoolInfo {
+  font-size: $font-size-sm;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.statsRow {
+  display: flex;
+  margin-top: $spacing-lg;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-lg;
+  padding: $spacing-md;
+}
+
+.statItem {
+  flex: 1;
+  text-align: center;
+
+  &:not(:last-child) {
+    border-right: 1rpx solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+.statNumber {
+  font-size: 36rpx;
+  font-weight: $font-weight-bold;
+  color: $color-text-white;
+  margin-bottom: 4rpx;
+}
+
+.statLabel {
+  font-size: 22rpx;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.content {
+  padding: 0 $page-padding;
+  padding-top: 60rpx;
+  padding-bottom: 120rpx;
+  position: relative;
+  z-index: 2;
+}
+
+.section {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  margin-bottom: $spacing-md;
+  overflow: hidden;
+}
+
+.sectionHeader {
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1rpx solid $color-divider;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+}
+
+.sectionMore {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md $spacing-lg;
+  transition: background $transition-fast;
+
+  &:active {
+    background: $color-bg-hover;
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1rpx solid $color-divider;
+  }
+}
+
+.menuIcon {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-md;
+  background: $color-primary-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  margin-right: $spacing-md;
+}
+
+.menuContent {
+  flex: 1;
+}
+
+.menuTitle {
+  font-size: $font-size-md;
+  color: $color-text-primary;
+  margin-bottom: 4rpx;
+}
+
+.menuDesc {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.menuArrow {
+  font-size: $font-size-lg;
+  color: $color-text-tertiary;
+}
+
+.miniActivityList {
+  padding: $spacing-sm $spacing-lg;
+}
+
+.miniActivityItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm 0;
+
+  &:not(:last-child) {
+    border-bottom: 1rpx solid $color-divider;
+  }
+}
+
+.miniActivityTitle {
+  flex: 1;
+  font-size: $font-size-sm;
+  color: $color-text-primary;
+  @include text-ellipsis;
+}
+
+.miniActivityStatus {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+  margin-left: $spacing-sm;
+}

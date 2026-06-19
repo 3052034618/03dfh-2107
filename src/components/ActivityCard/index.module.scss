@@ -1,0 +1,144 @@
+@use '@/styles/variables.scss' as *;
+
+.card {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  box-shadow: $shadow-card;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  transition: all $transition-base;
+
+  &:active {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+}
+
+.header {
+  margin-bottom: $spacing-md;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $spacing-sm;
+}
+
+.title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  flex: 1;
+  @include text-ellipsis;
+}
+
+.statusBadge {
+  padding: 6rpx 16rpx;
+  border-radius: $radius-round;
+  margin-left: $spacing-sm;
+  flex-shrink: 0;
+}
+
+.statusText {
+  font-size: 20rpx;
+  font-weight: $font-weight-medium;
+}
+
+.creatorRow {
+  display: flex;
+  align-items: center;
+}
+
+.creatorAvatar {
+  width: 40rpx;
+  height: 40rpx;
+  border-radius: $radius-round;
+  margin-right: $spacing-xs;
+}
+
+.creatorName {
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+}
+
+.infoRow {
+  display: flex;
+  background: $color-bg-tag;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.infoItem {
+  flex: 1;
+  text-align: center;
+}
+
+.infoLabel {
+  display: block;
+  font-size: 22rpx;
+  color: $color-text-tertiary;
+  margin-bottom: 4rpx;
+}
+
+.infoValue {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $color-text-primary;
+}
+
+.highlight {
+  color: $color-primary;
+  font-weight: $font-weight-semibold;
+}
+
+.scriptTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-xs;
+  margin-bottom: $spacing-md;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: $spacing-md;
+  border-top: 1rpx solid $color-divider;
+}
+
+.dateText {
+  font-size: 22rpx;
+  color: $color-text-secondary;
+}
+
+.memberAvatars {
+  display: flex;
+  align-items: center;
+}
+
+.memberAvatar {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: $radius-round;
+  border: 2rpx solid $color-bg-card;
+  margin-left: -12rpx;
+
+  &.first {
+    margin-left: 0;
+  }
+}
+
+.moreAvatar {
+  background: $color-primary-bg;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.moreText {
+  font-size: 18rpx;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
