@@ -24,12 +24,65 @@ const STORAGE_KEYS = {
   USER_ACTIVITIES: 'scriptclub_user_activities'
 };
 
+const migrateActivityData = (activities: Activity[]): Activity[] => {
+  return activities.map(activity => {
+    const migrated: Activity = { ...activity };
+    
+    if (!migrated.creatorId || !migrated.creatorName || !migrated.creatorAvatar) {
+      if ((migrated as any).creator) {
+        migrated.creatorId = (migrated as any).creator.id || mockCurrentUser.id;
+        migrated.creatorName = (migrated as any).creator.name || mockCurrentUser.name;
+        migrated.creatorAvatar = (migrated as any).creator.avatar || mockCurrentUser.avatar;
+      } else {
+        migrated.creatorId = mockCurrentUser.id;
+        migrated.creatorName = mockCurrentUser.name;
+        migrated.creatorAvatar = mockCurrentUser.avatar;
+      }
+      console.log('[Store] Migrated missing creator fields for activity:', migrated.id);
+    }
+    
+    if (!migrated.startDate) {
+      migrated.startDate = '2024-02-05';
+      console.log('[Store] Migrated missing startDate for activity:', migrated.id);
+    }
+    if (!migrated.endDate) {
+      migrated.endDate = '2024-02-06';
+      console.log('[Store] Migrated missing endDate for activity:', migrated.id);
+    }
+    
+    if (!Array.isArray(migrated.budgetItems) || migrated.budgetItems.length === 0) {
+      migrated.budgetItems = [
+        { id: generateId(), name: '交通车票', amount: 0, category: 'transport', note: '' },
+        { id: generateId(), name: '酒店住宿', amount: 0, category: 'accommodation', note: '' },
+        { id: generateId(), name: '剧本门票', amount: 0, category: 'ticket', note: '' },
+        { id: generateId(), name: '打车费用', amount: 0, category: 'taxi', note: '' },
+        { id: generateId(), name: '聚餐餐费', amount: 0, category: 'meal', note: '' }
+      ];
+      console.log('[Store] Migrated missing budgetItems for activity:', migrated.id);
+    }
+    
+    migrated.budgetItems = migrated.budgetItems.map(item => ({
+      id: item.id || generateId(),
+      name: item.name || '未命名',
+      amount: typeof item.amount === 'number' ? item.amount : 0,
+      category: item.category || 'other',
+      note: item.note || ''
+    }));
+    
+    return migrated;
+  });
+};
+
 export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [activities, setActivities] = useState<Activity[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEYS.ACTIVITIES);
       if (stored) {
-        return JSON.parse(stored);
+        const parsed = JSON.parse(stored);
+        console.log('[Store] Loaded', parsed.length, 'activities from storage, migrating...');
+        const migrated = migrateActivityData(parsed);
+        localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(migrated));
+        return migrated;
       }
     } catch (e) {
       console.error('[Store] Failed to load activities from localStorage:', e);
@@ -67,9 +120,18 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
   }, [userActivities]);
 
   const addActivity: StoreContextType['addActivity'] = (activityData) => {
+    console.log('[Store] addActivity received data:', activityData);
+    
+    const creatorId = (activityData as any).creator?.id || mockCurrentUser.id;
+    const creatorName = (activityData as any).creator?.name || mockCurrentUser.name;
+    const creatorAvatar = (activityData as any).creator?.avatar || mockCurrentUser.avatar;
+    
     const newActivity: Activity = {
       ...activityData,
       id: generateId(),
+      creatorId,
+      creatorName,
+      creatorAvatar,
       currentMembers: 0,
       status: 'recruiting',
       signUps: [],
@@ -83,6 +145,12 @@ export const StoreProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       votes: {},
       createTime: new Date().toLocaleString('zh-CN')
     };
+    
+    console.log('[Store] New activity created with creator:', 
+      newActivity.creatorName, 
+      'creatorId:', newActivity.creatorId,
+      'startDate:', newActivity.startDate,
+      'endDate:', newActivity.endDate);
 
     setActivities(prev => [newActivity, ...prev]);
     setUserActivities(prev => ({

@@ -26,7 +26,7 @@ const ActivityDetailPage: React.FC = () => {
       console.log('[ActivityDetail] Votes:', Object.keys(found.votes).length, 'voters');
       setActivity(found);
       setIsJoined(hasSignedUp(activityId, mockCurrentUser.id));
-      setIsCreator(found.creator?.id === mockCurrentUser.id);
+      setIsCreator(found.creatorId === mockCurrentUser.id);
     } else {
       console.error('[ActivityDetail] Activity not found:', activityId);
     }
@@ -106,7 +106,7 @@ const ActivityDetailPage: React.FC = () => {
             <Tag type={activity.status === 'recruiting' ? 'success' : activity.status === 'confirmed' ? 'primary' : 'default'}>
               {getStatusText(activity.status)}
             </Tag>
-            <Text className={styles.creatorInfo}>{activity.creator?.name || '未知'} 发起</Text>
+            <Text className={styles.creatorInfo}>{activity.creatorName || '未知'} 发起</Text>
           </View>
           <View className={styles.infoGrid}>
             <View className={styles.infoChip}>
@@ -125,6 +125,24 @@ const ActivityDetailPage: React.FC = () => {
         </View>
 
         <View className={styles.content}>
+          <View className={styles.dateCard}>
+            <View className={styles.dateItem}>
+              <Text className={styles.dateIcon}>🚀</Text>
+              <View className={styles.dateInfo}>
+                <Text className={styles.dateLabel}>出发日期</Text>
+                <Text className={styles.dateValue}>{activity.startDate}</Text>
+              </View>
+            </View>
+            <View className={styles.dateDivider} />
+            <View className={styles.dateItem}>
+              <Text className={styles.dateIcon}>🏠</Text>
+              <View className={styles.dateInfo}>
+                <Text className={styles.dateLabel}>返程日期</Text>
+                <Text className={styles.dateValue}>{activity.endDate}</Text>
+              </View>
+            </View>
+          </View>
+
           <View className={styles.card}>
             <Text className={styles.cardTitle}>
               <Text className={styles.cardTitleIcon}>📝</Text>

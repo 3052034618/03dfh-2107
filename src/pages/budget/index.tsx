@@ -50,9 +50,31 @@ const BudgetPage: React.FC = () => {
   useEffect(() => {
     const act = getActivityById(activityId);
     if (act) {
-      console.log('[Budget] Activity loaded:', act.id, 'budget items:', act.budgetItems.length);
+      console.log('[Budget] Activity loaded:', act.id, 'budget items:', act.budgetItems?.length || 0);
+      
+      let safeBudgetItems: BudgetItem[] = [];
+      if (Array.isArray(act.budgetItems) && act.budgetItems.length > 0) {
+        safeBudgetItems = act.budgetItems.map(item => ({
+          id: item.id || generateId(),
+          name: item.name || '未命名',
+          amount: typeof item.amount === 'number' ? item.amount : 0,
+          category: item.category || 'other',
+          note: item.note || ''
+        }));
+      } else {
+        console.log('[Budget] No budget items, initializing defaults');
+        safeBudgetItems = [
+          { id: generateId(), name: '交通车票', amount: 0, category: 'transport', note: '' },
+          { id: generateId(), name: '酒店住宿', amount: 0, category: 'accommodation', note: '' },
+          { id: generateId(), name: '剧本门票', amount: 0, category: 'ticket', note: '' },
+          { id: generateId(), name: '打车费用', amount: 0, category: 'taxi', note: '' },
+          { id: generateId(), name: '聚餐餐费', amount: 0, category: 'meal', note: '' }
+        ];
+      }
+      
+      console.log('[Budget] Safe budget items prepared:', safeBudgetItems.length, 'items');
       setActivity(act);
-      setBudgetItems([...act.budgetItems]);
+      setBudgetItems(safeBudgetItems);
     } else {
       console.error('[Budget] Activity not found:', activityId);
     }
