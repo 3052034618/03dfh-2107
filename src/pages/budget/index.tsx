@@ -3,8 +3,8 @@ import { View, Text, Image, Button, Input, Textarea, ScrollView } from '@tarojs/
 import Taro, { useRouter } from '@tarojs/taro';
 import classnames from 'classnames';
 import { useStore } from '@/store';
-import { BudgetItem } from '@/types';
-import { calculateTotalBudget, calculatePerPersonBudget, BUDGET_CATEGORY_LABELS, generateId } from '@/utils';
+import { BudgetItem, BUDGET_CATEGORY_LABELS } from '@/types';
+import { calculateTotalBudget, calculatePerPersonBudget, generateId } from '@/utils';
 import styles from './index.module.scss';
 
 const categoryIcons: Record<string, string> = {
@@ -91,12 +91,25 @@ const BudgetPage: React.FC = () => {
 
   const groupedItems = useMemo(() => {
     const groups: { [key: string]: BudgetItem[] } = {};
+    if (!Array.isArray(budgetItems)) {
+      return groups;
+    }
     budgetItems.forEach(item => {
-      const category = item.category || 'other';
-      if (!groups[category]) {
-        groups[category] = [];
+      try {
+        const category = item?.category || 'other';
+        if (!groups[category]) {
+          groups[category] = [];
+        }
+        groups[category].push({
+          id: item?.id || generateId(),
+          name: item?.name || '未命名',
+          amount: typeof item?.amount === 'number' ? item.amount : 0,
+          category: category,
+          note: item?.note || ''
+        });
+      } catch (e) {
+        console.error('[Budget] Error processing budget item:', item, e);
       }
-      groups[category].push(item);
     });
     return groups;
   }, [budgetItems]);
@@ -233,11 +246,23 @@ const BudgetPage: React.FC = () => {
   };
 
   const getCategoryLabel = (category: string) => {
-    return BUDGET_CATEGORY_LABELS[category as keyof typeof BUDGET_CATEGORY_LABELS] || category || '其他';
+    try {
+      if (!category) return '其他';
+      const label = BUDGET_CATEGORY_LABELS[category as keyof typeof BUDGET_CATEGORY_LABELS];
+      return label || category || '其他';
+    } catch (e) {
+      console.error('[Budget] Error getting category label:', category, e);
+      return '其他';
+    }
   };
 
   const getCategoryIcon = (category: string) => {
-    return categoryIcons[category] || '📦';
+    try {
+      if (!category) return '📦';
+      return categoryIcons[category] || '📦';
+    } catch (e) {
+      return '📦';
+    }
   };
 
   if (!activity) {
@@ -273,13 +298,13 @@ const BudgetPage: React.FC = () => {
           </View>
         </View>
 
-        {Object.entries(groupedItems).length === 0 ? (
+        {!groupedItems || Object.keys(groupedItems).length === 0 ? (
           <View className={styles.emptySection}>
             <Text className={styles.emptyIcon2}>📝</Text>
             <Text className={styles.emptyText2}>暂无费用项，点击下方添加</Text>
           </View>
         ) : (
-          Object.entries(groupedItems).map(([category, items]) => (
+          Object.entries(groupedItems || {}).map(([category, items]) => (
             <View key={category} className={styles.section}>
               <View className={styles.sectionHeader}>
                 <Text className={styles.sectionTitle}>
@@ -356,7 +381,7 @@ const BudgetPage: React.FC = () => {
               <View className={styles.categoryRow}>
                 <Text className={styles.categoryLabel}>分类：</Text>
                 <View className={styles.categoryOptions}>
-                  {Object.entries(BUDGET_CATEGORY_LABELS).map(([key, label]) => (
+                  {Object.entries(BUDGET_CATEGORY_LABELS || {}).map(([key, label]) => (
                     <Text
                       key={key}
                       className={classnames(styles.categoryOption, {

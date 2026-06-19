@@ -103,9 +103,10 @@ const ActivityDetailPage: React.FC = () => {
         <View className={styles.heroSection}>
           <Text className={styles.title}>{activity.title}</Text>
           <View className={styles.statusRow}>
-            <Tag type={activity.status === 'recruiting' ? 'success' : activity.status === 'confirmed' ? 'primary' : 'default'}>
-              {getStatusText(activity.status)}
-            </Tag>
+            <Tag 
+              type={activity.status === 'recruiting' ? 'success' : activity.status === 'confirmed' ? 'primary' : 'default'}
+              text={getStatusText(activity.status)}
+            />
             <Text className={styles.creatorInfo}>{activity.creatorName || '未知'} 发起</Text>
           </View>
           <View className={styles.infoGrid}>
@@ -177,10 +178,10 @@ const ActivityDetailPage: React.FC = () => {
                   <View key={script.id} className={styles.scriptItem}>
                     <Text className={styles.scriptName}>{script.name}</Text>
                     <View className={styles.scriptMeta}>
-                      <Tag type="secondary" size="small">{script.type}</Tag>
-                      <Tag type="default" size="small">{script.difficulty}</Tag>
-                      <Tag type="default" size="small">{script.duration}</Tag>
-                      <Tag type="default" size="small">{script.playerCount}</Tag>
+                      <Tag type="secondary" size="small" text={script.type} />
+                      <Tag type="default" size="small" text={script.difficulty} />
+                      <Tag type="default" size="small" text={script.duration} />
+                      <Tag type="default" size="small" text={script.playerCount} />
                     </View>
                     <Text className={styles.scriptDesc}>{script.description}</Text>
                   </View>
